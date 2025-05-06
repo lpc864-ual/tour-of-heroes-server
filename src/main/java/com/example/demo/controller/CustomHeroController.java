@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.HeroDTO;
@@ -114,5 +115,12 @@ public class CustomHeroController {
                 .ifPresent(hero -> {
                     heroRepository.delete(hero);
                 });
+    }
+
+    @GetMapping(params = "name")
+    public List<HeroDTO> searchHeroes(@RequestParam String name) {
+        return heroRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }
