@@ -20,6 +20,7 @@ import com.example.demo.dto.HeroDTO;
 import com.example.demo.entity.Hero;
 import com.example.demo.entity.Superpoder;
 import com.example.demo.repository.HeroRepository;
+import com.example.demo.service.MarvelApiService;
 
 @RestController
 @RequestMapping("/heroes")
@@ -36,6 +37,9 @@ public class CustomHeroController {
     @Autowired
     private HeroRepository heroRepository;
 
+    @Autowired
+    private MarvelApiService marvelApiService;
+
     private HeroDTO convertToDTO(Hero hero) {
         List<String> powerNames = hero.getPowers().stream()
                 .map(power -> power.getName())
@@ -44,7 +48,8 @@ public class CustomHeroController {
         return new HeroDTO(
                 hero.getId(),
                 hero.getName(),
-                powerNames);
+                powerNames,
+                hero.getImageUrl());
     }
 
     @GetMapping
@@ -95,6 +100,14 @@ public class CustomHeroController {
         Hero hero = new Hero();
         hero.setName(heroDTO.getName());
 
+        // Obtener imagen de Marvel API si existe
+        String imageUrl = null;
+        if (heroDTO.getName() != null && !heroDTO.getName().isEmpty()) {
+            imageUrl = marvelApiService.getHeroImageUrl(heroDTO.getName());
+            hero.setImageUrl(imageUrl);
+            System.out.println("Imagen asignada al héroe: " + imageUrl);
+        }
+
         // Agregar poderes si se proporcionan
         if (heroDTO.getPowers() != null) {
             for (String powerName : heroDTO.getPowers()) {
@@ -106,7 +119,10 @@ public class CustomHeroController {
         // Guardar el nuevo héroe
         Hero savedHero = heroRepository.save(hero);
 
-        return convertToDTO(savedHero);
+        // Convertir a DTO
+        HeroDTO resultDTO = convertToDTO(savedHero);
+
+        return resultDTO;
     }
 
     @DeleteMapping("/{id}")

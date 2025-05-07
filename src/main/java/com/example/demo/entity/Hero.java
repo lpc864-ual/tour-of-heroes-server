@@ -22,6 +22,8 @@ public class Hero {
 
     @NotBlank(message = "Name is mandatory") 
     private String name;
+
+    private String imageUrl;
     
     @OneToMany(mappedBy = "hero", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Superpoder> powers = new ArrayList<>();
@@ -66,6 +68,14 @@ public class Hero {
     public void removePower(Superpoder power) {
         powers.remove(power);
         power.setHero(null);
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

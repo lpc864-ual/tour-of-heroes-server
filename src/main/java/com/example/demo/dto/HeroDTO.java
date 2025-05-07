@@ -6,6 +6,7 @@ public class HeroDTO {
     private long id;
     private String name;
     private List<String> powers;
+    private String imageUrl;
 
     public HeroDTO() {
     }
@@ -14,6 +15,13 @@ public class HeroDTO {
         this.id = id;
         this.name = name;
         this.powers = powers;
+    }
+
+    public HeroDTO(long id, String name, List<String> powers, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.powers = powers;
+        this.imageUrl = imageUrl;
     }
 
     public long getId() {
@@ -38,5 +46,13 @@ public class HeroDTO {
 
     public void setPowers(List<String> powers) {
         this.powers = powers;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
